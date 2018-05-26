@@ -5,11 +5,20 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@+id/travel_news_list"
+        android:id="@+id/fresh_news_list"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp"/>
+
+    <TextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        tools:text="Plaza de España"/>
 
 </RelativeLayout>
