@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
      */
     private static final String GUARDIAN_API_REQUEST_URL =
             "https://content.guardianapis.com/search?from-date=2017-01-01&order-by=newest" +
-                    "&show-fields=headline%2Cbyline%2Cthumbnail&page-size=25&format=json" +
+                    "&show-fields=headline%2Cbyline%2Cthumbnail&page-size=10&format=json" +
                     "&api-key=5c759d1c-239f-445f-b72b-bfdb2d10b86b";
 
     /**

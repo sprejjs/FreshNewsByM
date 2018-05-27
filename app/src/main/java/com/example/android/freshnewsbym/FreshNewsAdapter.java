@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.bumptech.glide.Glide;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -58,8 +61,11 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
         FreshNews currentFreshNews = getItem(position);
 
         ImageView newsPhoto = (ImageView) listItemView.findViewById(R.id.news_photo);
-        newsPhoto.setImageResource(currentFreshNews.getThumbnail());
-        //BUSCAR LA FORMA DE DESPLEGAR LA FOTO DEL URL
+        
+        //Using Glide library to retrieve the photos from the URLs obtained through the custom object & adapter
+        Glide.with(getContext()).load(currentFreshNews.getThumbnail()).into(newsPhoto);
+        //newsPhoto.setImageResource(currentFreshNews.getThumbnail());
+        //newsPhoto.setImageResource(R.drawable.placeholder_image);
 
         TextView headline = (TextView) listItemView.findViewById(R.id.headline);
         headline.setText(currentFreshNews.getHeadline());

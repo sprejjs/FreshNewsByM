@@ -3,7 +3,7 @@ package com.example.android.freshnewsbym;
 public class FreshNews {
 
     //URL of the thumbnail associated with the news article
-    private int thumbnail;
+    private String thumbnail;
 
     //Headline of the news article
     private String headline;
@@ -12,7 +12,7 @@ public class FreshNews {
     private String byline;
 
     //Date when the news article was published
-    private String datePublished; //PROBABLY WILL NEED TO CHANGE THE TYPE TO DATE
+    private String datePublished;
 
     //Section to which the news article corresponds
     private String sectionName;
@@ -30,7 +30,7 @@ public class FreshNews {
      * @param vSectionName is the section to which the news article corresponds
      * @param vUrl is the URL of the news article
      * */
-    public FreshNews (int vThumbnail, String vHeadline, String vByline, String vDatePublished,
+    public FreshNews (String vThumbnail, String vHeadline, String vByline, String vDatePublished,
                       String vSectionName, String vUrl)
     {
         thumbnail = vThumbnail;
@@ -44,7 +44,7 @@ public class FreshNews {
     /**
      * Get the URL of the thumbnail
      */
-    public int getThumbnail() {
+    public String getThumbnail() {
         return thumbnail;
     }
 

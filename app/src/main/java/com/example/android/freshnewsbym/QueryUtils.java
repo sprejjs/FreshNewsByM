@@ -166,7 +166,7 @@ public final class QueryUtils {
                 JSONObject currentNews = freshNewsArrayJson.getJSONObject(i);
                 JSONObject fields = currentNews.getJSONObject("fields");
 
-                //String thumbnail = fields.getString("thumbnail"); //DA ERROR
+                String thumbnail = fields.getString("thumbnail");
                 String headline = fields.getString("headline");
                 String byline = fields.getString("byline");
                 String date = currentNews.getString("webPublicationDate");
@@ -184,7 +184,7 @@ public final class QueryUtils {
                 }
                 String dateNewFormat = formatDate(dateformatted);
 
-                FreshNews freshNews = new FreshNews(R.drawable.placeholder_image, headline, byline, dateNewFormat, section, url);
+                FreshNews freshNews = new FreshNews(thumbnail, headline, byline, dateNewFormat, section, url);
                 freshNewsArrayList.add(freshNews);
             }
 
