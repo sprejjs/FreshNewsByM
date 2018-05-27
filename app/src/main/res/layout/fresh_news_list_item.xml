@@ -22,6 +22,9 @@
         android:gravity="center"
         android:textColor="@android:color/black"
         android:textSize="@dimen/news_title"
+        android:maxLines="2"
+        android:layout_marginLeft="@dimen/padding_horizontal"
+        android:layout_marginRight="@dimen/padding_horizontal"
         tools:text="News title goes here" />
 
     <LinearLayout
@@ -41,6 +44,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/black"
             android:textSize="@dimen/byline_and_date"
+            android:maxLines="1"
             tools:text="By-line" />
 
         <TextView
@@ -50,6 +54,9 @@
             android:layout_weight="1"
             android:textColor="@android:color/black"
             android:textSize="@dimen/byline_and_date"
+            android:layout_marginRight="@dimen/padding_horizontal"
+            android:gravity="end"
+            android:textAlignment="gravity"
             tools:text="Date" />
 
     </LinearLayout>

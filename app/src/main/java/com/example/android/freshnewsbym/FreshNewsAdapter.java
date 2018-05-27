@@ -8,7 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
@@ -54,6 +59,7 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
 
         ImageView newsPhoto = (ImageView) listItemView.findViewById(R.id.news_photo);
         newsPhoto.setImageResource(currentFreshNews.getThumbnail());
+        //BUSCAR LA FORMA DE DESPLEGAR LA FOTO DEL URL
 
         TextView headline = (TextView) listItemView.findViewById(R.id.headline);
         headline.setText(currentFreshNews.getHeadline());

@@ -149,18 +149,19 @@ public final class QueryUtils {
 
             // build up a list of FreshNews objects with the corresponding data.
             JSONObject baseJsonResponse = new JSONObject(freshNewsJson);
-            JSONArray freshNewsArrayJson = baseJsonResponse.getJSONArray("results");
+            JSONObject response = baseJsonResponse.getJSONObject("response");
+            JSONArray freshNewsArrayJson = response.getJSONArray("results");
 
             for (int i = 0; i < freshNewsArrayJson.length(); i++) {
                 JSONObject currentNews = freshNewsArrayJson.getJSONObject(i);
-                JSONObject results = currentNews.getJSONObject("results");
+                JSONObject fields = currentNews.getJSONObject("fields");
 
-                //String thumbnail = fields.getString("thumbnail");
-                String headline = results.getString("sectionId");
-                String byline = results.getString("type");
-                String date = results.getString("webPublicationDate");
-                String section = results.getString("sectionName");
-                String url = results.getString("webUrl");
+                //String thumbnail = fields.getString("thumbnail"); //DA ERROR
+                String headline = fields.getString("headline");
+                String byline = fields.getString("byline");
+                String date = currentNews.getString("webPublicationDate");
+                String section = currentNews.getString("sectionName");
+                String url = currentNews.getString("webUrl");
 
                 FreshNews freshNews = new FreshNews(R.drawable.placeholder_image, headline, byline, date, section, url);
                 freshNewsArrayList.add(freshNews);

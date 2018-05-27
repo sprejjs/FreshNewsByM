@@ -3,7 +3,7 @@ package com.example.android.freshnewsbym;
 public class FreshNews {
 
     //URL of the thumbnail associated with the news article
-    private int thumbnail; //PROBABLY WILL NEED TO CHANGE THE TYPE TO STRING
+    private int thumbnail;
 
     //Headline of the news article
     private String headline;
@@ -45,7 +45,7 @@ public class FreshNews {
      * Get the URL of the thumbnail
      */
     public int getThumbnail() {
-        return thumbnail; //PROBABLY WILL NEED TO CHANGE THE TYPE TO STRING
+        return thumbnail;
     }
 
     /**
