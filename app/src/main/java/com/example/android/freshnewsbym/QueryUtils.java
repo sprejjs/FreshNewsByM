@@ -157,21 +157,33 @@ public final class QueryUtils {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            // build up a list of FreshNews objects with the corresponding data.
-            JSONObject baseJsonResponse = new JSONObject(freshNewsJson);
-            JSONObject response = baseJsonResponse.getJSONObject("response");
+            //Build up a list of FreshNews objects with the corresponding data
+            //(1) Convert JSON_RESPONSE String into a JSONObject
+            JSONObject listFromJSON = new JSONObject(freshNewsJson);
+            //(2) Extract the JSON object "response"
+            JSONObject response = listFromJSON.getJSONObject("response");
+            //(3) Extract the JSON array "results"
             JSONArray freshNewsArrayJson = response.getJSONArray("results");
 
+            String thumbnail;
             for (int i = 0; i < freshNewsArrayJson.length(); i++) {
                 JSONObject currentNews = freshNewsArrayJson.getJSONObject(i);
                 JSONObject fields = currentNews.getJSONObject("fields");
 
-                String thumbnail = fields.getString("thumbnail");
+                //String thumbnail = fields.getString("thumbnail");
                 String headline = fields.getString("headline");
                 String byline = fields.getString("byline");
                 String date = currentNews.getString("webPublicationDate");
                 String section = currentNews.getString("sectionName");
                 String url = currentNews.getString("webUrl");
+
+                //In case the news article doesn't have a thumbnail
+                try {
+                    thumbnail = fields.getString("thumbnail");
+                } catch (JSONException e) {
+                    thumbnail = "https://github.com/marielexoteria/FreshNewsByM/" +
+                            "blob/master/app/src/main/res/drawable/placeholder_image.xml";
+                }
 
                 //Formatting the date to May 27, 2018 14:05 on London time zone
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'", Locale.UK);
@@ -179,10 +191,10 @@ public final class QueryUtils {
                 Date dateformatted = null;
                 try {
                     dateformatted = simpleDateFormat.parse(date);
-                }catch (ParseException e){
+                } catch (ParseException e){
                     e.printStackTrace();
                 }
-                String dateNewFormat = formatDate(dateformatted);
+                String dateNewFormat = dateInFormatUK(dateformatted);
 
                 FreshNews freshNews = new FreshNews(thumbnail, headline, byline, dateNewFormat, section, url);
                 freshNewsArrayList.add(freshNews);
@@ -203,7 +215,7 @@ public final class QueryUtils {
 
     //code inspired by
     // https://stackoverflow.com/questions/6842245/converting-date-time-to-24-hour-format
-    private static String formatDate (Date date) {
+    private static String dateInFormatUK (Date date) {
         SimpleDateFormat newDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm",Locale.UK);
         newDateFormat.setTimeZone(TimeZone.getDefault());
         String formattedDate = newDateFormat.format(date);

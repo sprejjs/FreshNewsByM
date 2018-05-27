@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">FreshNewsByM</string>
 
+    <!-- Strings used in fresh_news_list_item.xml -->
+    <string name="news_photo_description">Image associated with the news article</string>
+
 
     <string name="no_news">No news found</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="no_picture_available">No picture available</string>
 </resources>

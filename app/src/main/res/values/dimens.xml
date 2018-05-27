@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Dimensions used in activity_main.xml -->
+    <dimen name="divider_height">0dp</dimen>
+    <dimen name="empty_state_text_space">10dp</dimen>
 
     <!-- Dimensions used in fresh_news_list_item.xml-->
     <dimen name="padding_horizontal">16dp</dimen>
     <dimen name="padding_vertical">16dp</dimen>
     <dimen name="margin_general">16dp</dimen>
 
+    <dimen name="space_byline_date">10dp</dimen>
+    <dimen name="space_between_news">20dp</dimen>
+    <dimen name="zero_dp">0dp</dimen>
+
     <dimen name="news_title">16sp</dimen>
     <dimen name="byline_and_date">14sp</dimen>
     <dimen name="section">12sp</dimen>
 
+    <dimen name="max_lines_headline">2</dimen>
+    <dimen name="max_lines_byline">1</dimen>
 
 </resources>

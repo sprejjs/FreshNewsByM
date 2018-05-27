@@ -61,14 +61,13 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
         FreshNews currentFreshNews = getItem(position);
 
         ImageView newsPhoto = (ImageView) listItemView.findViewById(R.id.news_photo);
-        
         //Using Glide library to retrieve the photos from the URLs obtained through the custom object & adapter
         Glide.with(getContext()).load(currentFreshNews.getThumbnail()).into(newsPhoto);
-        //newsPhoto.setImageResource(currentFreshNews.getThumbnail());
-        //newsPhoto.setImageResource(R.drawable.placeholder_image);
+
 
         TextView headline = (TextView) listItemView.findViewById(R.id.headline);
-        headline.setText(currentFreshNews.getHeadline());
+        headline.setText(position+1 + ") " + currentFreshNews.getHeadline());
+        //BORRAR POSITION + 1 CUANDO RESUELVA EL ISSUE DE QUE NO ME MUESTRA MÁS DE 21 POSTS
 
         TextView byline = (TextView) listItemView.findViewById(R.id.byline);
         byline.setText(currentFreshNews.getByline());
