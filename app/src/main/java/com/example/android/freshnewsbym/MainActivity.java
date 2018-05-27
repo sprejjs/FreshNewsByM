@@ -2,18 +2,25 @@ package com.example.android.freshnewsbym;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-
+import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Loader;
+import android.widget.TextView;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<FreshNews>> {
+
+    private static final String LOG_TAG = MainActivity.class.getName();
 
     /**
      * URL for the news from The Guardian
@@ -23,38 +30,34 @@ public class MainActivity extends AppCompatActivity {
                     "&show-fields=headline%2Cbyline%2Cthumbnail&page-size=25&format=json" +
                     "&api-key=5c759d1c-239f-445f-b72b-bfdb2d10b86b";
 
+    /**
+     * Constant value for the news loader ID. We can choose any integer.
+     * This really only comes into play if you're using multiple loaders.
+     */
+    private static final int NEWS_LOADER_ID = 1;
 
-    /** Adapter for the list of newss */
+    /** Adapter for the list of news */
     private FreshNewsAdapter newsAdapter;
 
-    //https://content.guardianapis.com/search?q=travel&api-key=test -> según la documentación del API
-
-    //https://content.guardianapis.com/search?from-date=2017-01-01&order-by=newest
-    // &show-fields=headline%2Cbyline%2Cthumbnail&page-size=25&format=json
-    // &api-key=5c759d1c-239f-445f-b72b-bfdb2d10b86b
-    // mi key con todas las noticias (no puedo solamente elegir una sección porque
-    //la sección donde está la noticia es required - no tiene sentido que ponga "travel" si el app
-    //es sólo de eso
+    /** TextView that is displayed when the list is empty */
+    private TextView emptyStateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Start the AsyncTask to fetch the news data
-        FreshNewsAsyncTask task = new FreshNewsAsyncTask();
-        task.execute(GUARDIAN_API_REQUEST_URL);
+        //Get a reference to the ListView, and attach the adapter to the listView.
+        ListView freshNewsListView = (ListView) findViewById(R.id.fresh_news_list);
 
-        // Create an ArrayList of FreshNews objects
-        //ArrayList<FreshNews> freshNews = QueryUtils.extractFreshNews();
+        //Hooking up the TextView to be the empty view
+        emptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        freshNewsListView.setEmptyView(emptyStateTextView);
 
-        // Create a new adapter that takes an empty list of news as input
+        //Create a new adapter that takes an empty list of news as input
         newsAdapter = new FreshNewsAdapter(this, new ArrayList<FreshNews>());
 
-        // Get a reference to the ListView, and attach the adapter to the listView.
-        ListView freshNewsListView = (ListView) findViewById(R.id.fresh_news_list);
         freshNewsListView.setAdapter(newsAdapter);
-
         freshNewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -71,32 +74,62 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(websiteIntent);
             }
         });
+
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        // If there is a network connection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Get a reference to the LoaderManager, in order to interact with loaders.
+            LoaderManager loaderManager = getLoaderManager();
+
+            // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+            // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+            // because this activity implements the LoaderCallbacks interface).
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+        } else {
+            // Otherwise, display error
+            // First, hide loading indicator so error message will be visible
+            View loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.GONE);
+
+            // Update empty state with no connection error message
+            emptyStateTextView.setText(R.string.no_internet_connection);
+        }
     }
 
-    private class FreshNewsAsyncTask extends AsyncTask<String, Void, List<FreshNews>> {
+    @Override
+    public Loader<List<FreshNews>> onCreateLoader(int i, Bundle bundle) {
+        // Create a new loader for the given URL
+        return new FreshNewsLoader(this, GUARDIAN_API_REQUEST_URL);
+    }
 
-        @Override
-        protected List<FreshNews> doInBackground(String... urls) {
-            // Don't perform the request if there are no URLs, or the first URL is null.
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
+    @Override
+    public void onLoadFinished(Loader<List<FreshNews>> loader, List<FreshNews> news) {
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
 
-            List<FreshNews> result = QueryUtils.fetchNewsData(urls[0]);
-            return result;
+        // Set empty state text to display "No news found."
+        emptyStateTextView.setText(R.string.no_news);
+
+        // Clear the adapter of previous news data
+        newsAdapter.clear();
+
+        // If there is a valid list of {@link FreshNews}, then add them to the adapter's
+        // data set. This will trigger the ListView to update.
+        if (news != null && !news.isEmpty()) {
+            newsAdapter.addAll(news);
         }
+    }
 
-        @Override
-        protected void onPostExecute(List<FreshNews> data) {
-            // Clear the adapter of previous news data
-            newsAdapter.clear();
-
-            // If there is a valid list of {@link FreshNews}, then add them to the adapter's
-            // data set. This will trigger the ListView to update.
-            if (data != null && !data.isEmpty()) {
-                newsAdapter.addAll(data);
-            }
-
-        }
+    @Override
+    public void onLoaderReset(Loader<List<FreshNews>> loader) {
+        // Loader reset, so we can clear out our existing data.
+        newsAdapter.clear();
     }
 }

@@ -1,13 +1,11 @@
 package com.example.android.freshnewsbym;
 
-import android.nfc.Tag;
+
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +16,11 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public final class QueryUtils {
 
@@ -37,6 +40,13 @@ public final class QueryUtils {
     public static List<FreshNews> fetchNewsData(String requestUrl) {
         // Create URL object
         URL url = createUrl(requestUrl);
+
+        //Slowing down the background thread to test the loading indicator
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = null;
@@ -163,7 +173,18 @@ public final class QueryUtils {
                 String section = currentNews.getString("sectionName");
                 String url = currentNews.getString("webUrl");
 
-                FreshNews freshNews = new FreshNews(R.drawable.placeholder_image, headline, byline, date, section, url);
+                //Formatting the date to May 27, 2018 14:05 on London time zone
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'", Locale.UK);
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                Date dateformatted = null;
+                try {
+                    dateformatted = simpleDateFormat.parse(date);
+                }catch (ParseException e){
+                    e.printStackTrace();
+                }
+                String dateNewFormat = formatDate(dateformatted);
+
+                FreshNews freshNews = new FreshNews(R.drawable.placeholder_image, headline, byline, dateNewFormat, section, url);
                 freshNewsArrayList.add(freshNews);
             }
 
@@ -177,6 +198,16 @@ public final class QueryUtils {
 
         // Return the list of news
         return freshNewsArrayList;
+
+    }
+
+    //code inspired by
+    // https://stackoverflow.com/questions/6842245/converting-date-time-to-24-hour-format
+    private static String formatDate (Date date) {
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm",Locale.UK);
+        newDateFormat.setTimeZone(TimeZone.getDefault());
+        String formattedDate = newDateFormat.format(date);
+        return formattedDate;
     }
 
 }

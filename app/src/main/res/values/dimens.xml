@@ -7,7 +7,8 @@
     <dimen name="margin_general">16dp</dimen>
 
     <dimen name="news_title">16sp</dimen>
-    <dimen name="byline_and_date">12sp</dimen>
+    <dimen name="byline_and_date">14sp</dimen>
+    <dimen name="section">12sp</dimen>
 
 
 </resources>
