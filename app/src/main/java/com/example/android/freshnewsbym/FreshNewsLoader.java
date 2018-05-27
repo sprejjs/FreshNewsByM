@@ -4,6 +4,11 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import java.util.List;
 
+/**
+ * Loads a list of earthquakes by using an AsyncTask to perform the
+ * network request to the given URL.
+ */
+
 public class FreshNewsLoader extends AsyncTaskLoader<List<FreshNews>> {
 
     /** Tag for log messages */

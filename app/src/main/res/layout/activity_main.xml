@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,22 +13,55 @@
         android:divider="@null"
         android:dividerHeight="@dimen/divider_height"/>
 
-    <!-- Empty view is only visible when the list has no items. -->
-    <TextView
-        android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="@android:color/black"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:layout_marginTop="@dimen/empty_state_text_space"/>
+    <!-- Empty view is only visible when the list has
+    no items or on no internet connection. -->
 
-    <!-- Loading indicator is only shown before the first load -->
-    <ProgressBar
-        android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/empty_view_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/ic_launcher_foreground"/>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:layout_marginTop="@dimen/empty_state_text_space"/>
+
+    </LinearLayout>
+
+
+    <!-- Circular loading indicator and loading text
+    are only shown before the first load -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            android:theme="@style/CircularProgress"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
+
+        <TextView
+            android:id="@+id/text_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:layout_marginTop="@dimen/empty_state_text_space"
+            android:text="@string/text_loading"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

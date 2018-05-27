@@ -1,22 +1,13 @@
 package com.example.android.freshnewsbym;
 
 import android.app.Activity;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.bumptech.glide.Glide;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.net.URL;
 import java.util.ArrayList;
 
 public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
@@ -24,7 +15,7 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
     private static final String LOG_TAG = FreshNewsAdapter.class.getSimpleName();
 
     /**
-     * This is our own custom constructor (it doesn't mirror a superclass constructor).
+     * This is the own custom constructor (it doesn't mirror a superclass constructor).
      * The context is used to inflate the layout file, and the list is the data we want
      * to populate into the lists.
      *
@@ -32,10 +23,13 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
      * @param freshNews      A List of FreshNews objects to display in a list
      */
     public FreshNewsAdapter(Activity context, ArrayList<FreshNews> freshNews) {
-        // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
-        // the second argument is used when the ArrayAdapter is populating a single TextView.
-        // Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
-        // going to use this second argument, so it can be any value. Here, we used 0.
+
+        /**
+         * Here, we initialize the ArrayAdapter's internal storage for the context and the list.
+         * The second argument is used when the ArrayAdapter is populating a single TextView.
+         * Because this is a custom adapter for two TextViews and an ImageView, the adapter is not
+         * going to use this second argument, so it can be any value. Here, we used 0.
+         */
         super(context, 0, freshNews);
     }
 
@@ -50,36 +44,42 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Check if the existing view is being reused, otherwise inflate the view
+
+        //Check if the existing view is being reused, otherwise inflate the view.
         View listItemView = convertView;
         if(listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.fresh_news_list_item, parent, false);
         }
 
-        // Get the {@link AndroidFlavor} object located at this position in the list
+        //Get the {@link FreshNews} object located at this position in the list.
         FreshNews currentFreshNews = getItem(position);
 
+        //Start populating the different elements of the list item
+
+        //Thumbnail
         ImageView newsPhoto = (ImageView) listItemView.findViewById(R.id.news_photo);
         //Using Glide library to retrieve the photos from the URLs obtained through the custom object & adapter
         Glide.with(getContext()).load(currentFreshNews.getThumbnail()).into(newsPhoto);
 
-
+        //Headline
         TextView headline = (TextView) listItemView.findViewById(R.id.headline);
-        headline.setText(position+1 + ") " + currentFreshNews.getHeadline());
-        //BORRAR POSITION + 1 CUANDO RESUELVA EL ISSUE DE QUE NO ME MUESTRA MÁS DE 21 POSTS
+        headline.setText(currentFreshNews.getHeadline());
 
+        //By-line
         TextView byline = (TextView) listItemView.findViewById(R.id.byline);
         byline.setText(currentFreshNews.getByline());
 
+        //Date
         TextView datePublished = (TextView) listItemView.findViewById(R.id.date_published);
         datePublished.setText(currentFreshNews.getDatePublished());
 
+        //Section (sports, travel, etc.)
         TextView sectionName = (TextView) listItemView.findViewById(R.id.section);
         sectionName.setText(currentFreshNews.getSectionName());
 
 
-        // Return the whole list item layout
+        //Return the whole list item layout
         return listItemView;
     }
 }

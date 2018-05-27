@@ -35,10 +35,16 @@ public final class QueryUtils {
     }
 
     /**
+     * Return a list of {@link FreshNews} objects that has been built up from
+     * parsing a JSON response.
+     */
+
+    /**
      * Query the Guardian API and return a list of {@link FreshNews} objects.
      */
     public static List<FreshNews> fetchNewsData(String requestUrl) {
-        // Create URL object
+
+        //Create an URL object
         URL url = createUrl(requestUrl);
 
         //Slowing down the background thread to test the loading indicator
@@ -48,7 +54,7 @@ public final class QueryUtils {
             e.printStackTrace();
         }
 
-        // Perform HTTP request to the URL and receive a JSON response back
+        //Perform HTTP request to the URL and receive a JSON response back
         String jsonResponse = null;
         try {
             jsonResponse = makeHttpRequest(url);
@@ -56,10 +62,10 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link FreshNews}
+        //Extract the relevant fields from the JSON response and create a list of {@link FreshNews}
         List<FreshNews> news = extractFeatureFromJson(jsonResponse);
 
-        // Return the list of {@link FreshNews}
+        //Return the list of {@link FreshNews}
         return news;
     }
 
@@ -82,7 +88,7 @@ public final class QueryUtils {
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
-        // If the URL is null, then return early.
+        //If the URL is null, then return early.
         if (url == null) {
             return jsonResponse;
         }
@@ -96,8 +102,8 @@ public final class QueryUtils {
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            // If the request was successful (response code 200),
-            // then read the input stream and parse the response.
+            //If the request was successful (response code 200),
+            //then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
@@ -111,9 +117,9 @@ public final class QueryUtils {
                 urlConnection.disconnect();
             }
             if (inputStream != null) {
-                // Closing the input stream could throw an IOException, which is why
-                // the makeHttpRequest(URL url) method signature specifies than an IOException
-                // could be thrown.
+                //Closing the input stream could throw an IOException, which is why
+                //the makeHttpRequest(URL url) method signature specifies than an IOException
+                //could be thrown.
                 inputStream.close();
             }
         }
@@ -146,80 +152,89 @@ public final class QueryUtils {
      */
     private static List<FreshNews> extractFeatureFromJson(String freshNewsJson) {
 
-        // If the JSON string is empty or null, then return early.
+        //If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(freshNewsJson)) {
             return null;
         }
 
-        // Create an empty ArrayList that we can start adding fresh news to
+        //Create an empty ArrayList that we can start adding fresh news to.
         List<FreshNews> freshNewsArrayList = new ArrayList<>();
 
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        //Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            //Build up a list of FreshNews objects with the corresponding data
-            //(1) Convert JSON_RESPONSE String into a JSONObject
-            JSONObject listFromJSON = new JSONObject(freshNewsJson);
-            //(2) Extract the JSON object "response"
-            JSONObject response = listFromJSON.getJSONObject("response");
-            //(3) Extract the JSON array "results"
+            //Build up a list of FreshNews objects with the corresponding data.
+
+            //(1) Convert JSON_RESPONSE String into a JSONObject.
+            JSONObject listJsonResponse = new JSONObject(freshNewsJson);
+
+            //(2) Extract the JSON object "response".
+            JSONObject response = listJsonResponse.getJSONObject("response");
+
+            //(3) Extract the JSON array "results".
             JSONArray freshNewsArrayJson = response.getJSONArray("results");
 
-            String thumbnail;
+            /* Extracting the items one at a time (until page-size as specified in the
+             * Guardian API URL).
+             */
             for (int i = 0; i < freshNewsArrayJson.length(); i++) {
                 JSONObject currentNews = freshNewsArrayJson.getJSONObject(i);
-                JSONObject fields = currentNews.getJSONObject("fields");
 
-                //String thumbnail = fields.getString("thumbnail");
-                String headline = fields.getString("headline");
-                String byline = fields.getString("byline");
+                //Extracting items directly under "results" (as specified in FreshNews.java)
                 String date = currentNews.getString("webPublicationDate");
                 String section = currentNews.getString("sectionName");
                 String url = currentNews.getString("webUrl");
 
-                //In case the news article doesn't have a thumbnail
-                try {
-                    thumbnail = fields.getString("thumbnail");
-                } catch (JSONException e) {
+                //Extracting items under the key "fields" (as specified in FreshNews.java)
+                JSONObject fields = currentNews.getJSONObject("fields");
+
+                String thumbnail;
+
+                //Fallback image in case of there is no thumbnail in a news article.
+                if (fields.getString("thumbnail").isEmpty()) {
                     thumbnail = "https://github.com/marielexoteria/FreshNewsByM/" +
-                            "blob/master/app/src/main/res/drawable/placeholder_image.xml";
+                            "blob/master/app/src/main/res/drawable/placeholder_image_not_found.png";
+                } else {
+                    thumbnail = fields.getString("thumbnail");
                 }
 
-                //Formatting the date to May 27, 2018 14:05 on London time zone
+                String headline = fields.getString("headline");
+                String byline = fields.getString("byline");
+
+                //Formatting the date to "May 27, 2018 14:05" on London time zone.
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'", Locale.UK);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                Date dateformatted = null;
+                Date dateFormatted = null;
                 try {
-                    dateformatted = simpleDateFormat.parse(date);
-                } catch (ParseException e){
+                    dateFormatted = simpleDateFormat.parse(date);
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String dateNewFormat = dateInFormatUK(dateformatted);
+                String dateNewFormat = dateFormatInEnglish(dateFormatted);
 
-                FreshNews freshNews = new FreshNews(thumbnail, headline, byline, dateNewFormat, section, url);
-                freshNewsArrayList.add(freshNews);
+                //Adding all the elements to the ArrayList
+                freshNewsArrayList.add(new FreshNews(thumbnail, headline, byline, dateNewFormat, section, url));
             }
 
         } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
+
+            //If an error is thrown when executing any of the above statements in the "try" block,
+            //catch the exception here, so the app doesn't crash. Print a log message
+            //with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
-
-        // Return the list of news
+        //Return the list of news
         return freshNewsArrayList;
 
     }
 
-    //code inspired by
+    //Code inspired by
     // https://stackoverflow.com/questions/6842245/converting-date-time-to-24-hour-format
-    private static String dateInFormatUK (Date date) {
+    private static String dateFormatInEnglish (Date date) {
         SimpleDateFormat newDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm",Locale.UK);
         newDateFormat.setTimeZone(TimeZone.getDefault());
-        String formattedDate = newDateFormat.format(date);
-        return formattedDate;
+        return newDateFormat.format(date);
     }
 
 }

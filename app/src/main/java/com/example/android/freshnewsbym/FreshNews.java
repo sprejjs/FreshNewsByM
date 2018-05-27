@@ -66,7 +66,7 @@ public class FreshNews {
      * Get the date when the news article was published
      */
     public String getDatePublished() {
-        return datePublished; //PROBABLY WILL NEED TO CHANGE THE TYPE TO DATE
+        return datePublished;
     }
 
     /**
