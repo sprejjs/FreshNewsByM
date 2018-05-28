@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             loadingIndicatorText.setVisibility(View.GONE);
 
             //Update the empty state with no connection error message.
-            emptyStateImageView.setImageResource(R.drawable.ic_launcher_background);
+            emptyStateImageView.setImageResource(R.drawable.no_wifi);
             emptyStateTextView.setText(R.string.no_internet_connection);
 
         }
@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         textLoading.setVisibility(View.GONE);
 
         //Set empty state text to display "No news found."
-        emptyStateImageView.setImageResource(R.drawable.ic_launcher_foreground);
-        //LA FOTO SE MUESTRA AÚN HABIENDO NOTICIAS
         emptyStateTextView.setText(R.string.no_news);
 
         //Clear the adapter of previous news data

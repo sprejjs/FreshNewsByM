@@ -37,7 +37,7 @@ public class FreshNews {
         headline = vHeadline;
         byline = vByline;
         datePublished = vDatePublished;
-        sectionName = "Section: " + vSectionName;
+        sectionName = vSectionName;
         url = vUrl;
     }
 

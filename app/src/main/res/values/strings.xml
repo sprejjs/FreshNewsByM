@@ -5,7 +5,7 @@
     <string name="news_photo_description">Image associated with the news article</string>
 
     <!-- Various messages -->
-    <string name="text_loading">Fetching your news...</string>
+    <string name="text_loading">Fetching your news&#8230;</string>
     <string name="no_news">No news found</string>
     <string name="no_internet_connection">No internet connection</string>
 </resources>

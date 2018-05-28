@@ -188,18 +188,16 @@ public final class QueryUtils {
                 //Extracting items under the key "fields" (as specified in FreshNews.java)
                 JSONObject fields = currentNews.getJSONObject("fields");
 
-                String thumbnail;
-
-                //Fallback image in case of there is no thumbnail in a news article.
-                if (fields.getString("thumbnail").isEmpty()) {
-                    thumbnail = "https://github.com/marielexoteria/FreshNewsByM/" +
-                            "blob/master/app/src/main/res/drawable/placeholder_image_not_found.png";
-                } else {
-                    thumbnail = fields.getString("thumbnail");
-                }
-
+                String thumbnail = fields.getString("thumbnail");
                 String headline = fields.getString("headline");
-                String byline = fields.getString("byline");
+                String byline;
+
+                //Fallback text in case there is no author
+                if (fields.getString("byline").isEmpty()) {
+                    byline = "Author not available";
+                } else {
+                    byline = fields.getString("byline");
+                }
 
                 //Formatting the date to "May 27, 2018 14:05" on London time zone.
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'", Locale.UK);

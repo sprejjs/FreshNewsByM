@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
@@ -60,11 +61,21 @@ public class FreshNewsAdapter extends ArrayAdapter<FreshNews> {
         //Thumbnail
         ImageView newsPhoto = (ImageView) listItemView.findViewById(R.id.news_photo);
         //Using Glide library to retrieve the photos from the URLs obtained through the custom object & adapter
-        Glide.with(getContext()).load(currentFreshNews.getThumbnail()).into(newsPhoto);
+        /*centerCrop() is needed so that the image displays full width in the ImageView:
+        http://bumptech.github.io/glide/doc/transformations.html*/
+
+        Glide.with(getContext()).load(currentFreshNews.getThumbnail())
+                .apply(
+                        new RequestOptions()
+                                .placeholder(R.drawable.placeholder_image)
+                                .fallback(R.drawable.error_and_fallback_image)
+                                .error(R.drawable.error_and_fallback_image)
+                                .centerCrop())
+                .into(newsPhoto);
 
         //Headline
         TextView headline = (TextView) listItemView.findViewById(R.id.headline);
-        headline.setText(currentFreshNews.getHeadline());
+        headline.setText(position+1 + ") " +currentFreshNews.getHeadline());
 
         //By-line
         TextView byline = (TextView) listItemView.findViewById(R.id.byline);
