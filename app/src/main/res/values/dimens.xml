@@ -8,14 +8,15 @@
     <!-- Dimensions used in fresh_news_list_item.xml-->
     <dimen name="padding_horizontal">16dp</dimen>
     <dimen name="padding_vertical">16dp</dimen>
-    <dimen name="margin_general">16dp</dimen>
+    <dimen name="margin_general">30dp</dimen>
+    <dimen name="margin_vertical">10dp</dimen>
 
-    <dimen name="news_title">16sp</dimen>
+    <dimen name="news_title">18sp</dimen>
     <dimen name="byline_and_date">14sp</dimen>
-    <dimen name="section">12sp</dimen>
+    <dimen name="section">14sp</dimen>
 
     <dimen name="space_byline_date">10dp</dimen>
-    <dimen name="space_between_news">45dp</dimen>
+    <dimen name="space_between_news">25dp</dimen>
     <dimen name="zero_dp">0dp</dimen>
 
 

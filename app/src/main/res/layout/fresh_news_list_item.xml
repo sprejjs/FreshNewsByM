@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/card_style_background">
 
     <ImageView
         android:id="@+id/news_photo"
@@ -20,19 +22,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:textColor="@android:color/black"
-        android:textStyle="bold"
         android:textSize="@dimen/news_title"
         android:maxLines="2"
         android:layout_marginLeft="@dimen/padding_horizontal"
         android:layout_marginRight="@dimen/padding_horizontal"
+        app:fontFamily="@font/roboto_medium"
         tools:text="News title goes here" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/margin_vertical"
         android:layout_marginLeft="@dimen/padding_horizontal"
         android:layout_marginStart="@dimen/padding_vertical"
         android:orientation="horizontal">
@@ -65,12 +66,13 @@
         android:id="@+id/section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_purple"
-        android:textStyle="bold"
-        android:textSize="@dimen/byline_and_date"
         android:layout_marginBottom="@dimen/space_between_news"
         android:layout_marginLeft="@dimen/padding_horizontal"
         android:layout_marginRight="@dimen/padding_horizontal"
-        tools:text="Category"/>
+        android:layout_marginTop="@dimen/margin_vertical"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/byline_and_date"
+        app:fontFamily="@font/roboto_medium"
+        tools:text="Category" />
 
 </LinearLayout>

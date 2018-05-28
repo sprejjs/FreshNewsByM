@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
 
     <ListView
         android:id="@+id/fresh_news_list"
@@ -11,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:dividerHeight="@dimen/divider_height"/>
+        android:dividerHeight="@dimen/margin_general"
+        android:layout_marginBottom="@dimen/margin_general"/>
 
     <!-- Empty view is only visible when the list has
     no items or on no internet connection. -->
