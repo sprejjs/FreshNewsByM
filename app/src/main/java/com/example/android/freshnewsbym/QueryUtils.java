@@ -188,7 +188,11 @@ public final class QueryUtils {
                 //Extracting items under the key "fields" (as specified in FreshNews.java)
                 JSONObject fields = currentNews.getJSONObject("fields");
 
-                String thumbnail = fields.getString("thumbnail");
+                String thumbnail = null;
+                if (fields.has("thumbnail")) {
+                    thumbnail = fields.getString("thumbnail");
+                }
+
                 String headline = fields.getString("headline");
                 String byline;
 
